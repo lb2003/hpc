@@ -32,7 +32,7 @@
 
  cblas与naive的比较
 
-![](https://github.com/lb2003/hpc/blob/main/lab3/cblas.jpg)
+![](https://github.com/lb2003/hpc/blob/main/lab3/cblas.png)
 
 4.
 
