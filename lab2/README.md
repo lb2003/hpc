@@ -103,68 +103,68 @@ pthread
 
 n = m = k = 2048
 
-![](https://github.com/lb2003/hpc/tree/main/photo/p2048.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/p2048.png)
 
 n = m = k = 1024
 
-![](https://github.com/lb2003/hpc/tree/main/photo/p1024.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/p1024.png)
 
 n = m = k = 256
 
-![](https://github.com/lb2003/hpc/tree/main/photo/p256.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/p256.png)
 
 n = m = k = 64
 
-![](https://github.com/lb2003/hpc/tree/main/photo/p64.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/p64.png)
 
 n = m = k = 16
 
-![](https://github.com/lb2003/hpc/tree/main/photo/p16.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/p16.png)
 
 OpenMp
 
 n = m = k = 2048
 
-![](https://github.com/lb2003/hpc/tree/main/photo/o2048.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/o2048.png)
 
 n = m = k = 1024
 
-![](https://github.com/lb2003/hpc/tree/main/photo/o1024.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/o1024.png)
 
 n = m = k = 256
 
-![](https://github.com/lb2003/hpc/tree/main/photo/o256.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/o256.png)
 
 n = m = k = 64
 
-![](https://github.com/lb2003/hpc/tree/main/photo/o64.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/o64.png)
 
 n = m = k = 16
 
-![](https://github.com/lb2003/hpc/tree/main/photo/o16.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/o16.png)
 
 naive
 
 n = m = k = 2048
 
-![](https://github.com/lb2003/hpc/tree/main/photo/n2048.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/n2048.png)
 
 n = m = k = 1024
 
-![](https://github.com/lb2003/hpc/tree/main/photo/n1024.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/n1024.png)
 
 n = m = k = 512
 
-![](https://github.com/lb2003/hpc/tree/main/photo/n512.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/n512.png)
 
 n = m = k = 256
 
-![](https://github.com/lb2003/hpc/tree/main/photo/n256.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/n256.png)
 
 n = m = k = 64
 
-![](https://github.com/lb2003/hpc/tree/main/photo/n64.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/n64.png)
 
 n = m = k = 16
 
-![](https://github.com/lb2003/hpc/tree/main/photo/n16.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/n16.png)
