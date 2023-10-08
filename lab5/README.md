@@ -16,7 +16,7 @@
 
 系统: Ubuntu22.04
 
-CPU: 12th Gen Intel(R) Core(TM) i7-12700H 14核 28线程
+CPU: 12th Gen Intel(R) Core(TM) i7-12700H 14核 20线程
 
 --- 
 
