@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/time.h>
+#include "f77blas.h"
 
 double *A, *B, *C;
 int n, m, k;
@@ -40,6 +42,8 @@ void *pthread_mult(void *id) {
 void solve() {
     srand(time(0));
     scanf("%d%d%d", &m, &n, &k);
+    struct timeval start, finish;
+    double duration;
     A = (double*) malloc(sizeof(double) * m * n);
     B = (double*) malloc(sizeof(double) * n * k);
     C = (double*) malloc(sizeof(double) * m * k);
@@ -53,20 +57,28 @@ void solve() {
     int tnum = 28;
     block = (m + tnum - 1) / tnum;
     pthread_t *thread_handles = (pthread_t*) malloc(tnum * sizeof(pthread_t));
+    gettimeofday(&start, NULL);
     for (int i = 0; i < tnum; ++i)
         pthread_create(&thread_handles[i], NULL, pthread_mult, (void *) i);
     for (int i = 0; i < tnum; ++i)
         pthread_join(thread_handles[i], NULL);
+    gettimeofday(&finish, NULL);
+    duration = ((double)(finish.tv_sec-start.tv_sec)*1000000 + (double)(finish.tv_usec-start.tv_usec)) / 1000000;
+
+    double gflops = 2.0 * m * n * k;
+    gflops = gflops / duration * 1.0e-6 / 1000;
+    printf("%d:\nduration: %lf\nGflops: %lf\n", n, duration, gflops);
+    /*
     for (int i = 0; i < m; ++i) {
         for (int j = 0; j < k; ++j) {
             printf("%lf ", C[i * k + j]);
         } puts("");
-    }
+    }*/
 }
 
 int main() {
     freopen("a.in", "r", stdin);
-    freopen("a.ou", "w", stdout);
+    freopen("dg.ou", "w", stdout);
     solve();
     return 0;
 }

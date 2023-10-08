@@ -8,7 +8,7 @@
 
 ----
 
-## lab5、lab6
+## lab5,6,7
 
 ----
 
@@ -26,7 +26,9 @@ CPU: 12th Gen Intel(R) Core(TM) i7-12700H 14核 28线程
 
 2. OpenMP方法也是运用分块法优化，for循环处采用多线程运算。
 
-3. naive法未做过多调整。
+3. MPI方法采用主进程传递数据，分进程处理、回传数据。
+
+4. naive法未做过多调整。
 
 ### 关键代码：
 
@@ -84,6 +86,66 @@ void mult(int tid) {\\分块优化+多线程
 }
 ```
 
+MPI法
+
+```cpp
+    int id, siz, block;
+    MPI_Init(0, 0);
+    MPI_Comm_size(MPI_COMM_WORLD, &siz);
+    MPI_Comm_rank(MPI_COMM_WORLD, &id);
+    MPI_Status status;
+
+
+    if (id == 0) {
+        //派发
+        struct timeval start, finish;
+        double duration;
+
+        gettimeofday(&start, NULL);
+        for (int i = 1; i < siz; ++i) {
+            MPI_Send(A + (i - 1) * block * n, block * n, MPI_DOUBLE, i, 66, MPI_COMM_WORLD);
+        } MPI_Bcast(B, n * k, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+        //接收
+        for (int t = 1; t < siz; ++t) {
+            MPI_Recv(tmp, block * k, MPI_DOUBLE, t, 33, MPI_COMM_WORLD, &status);
+            for (int i = 0; i < block; ++i)
+                for (int j = 0; j < k; ++j)
+                    C[((t - 1) * block + i) * k + j] = tmp[i * k + j]; 
+        } for (int i = (siz - 1) * block; i < m; ++i) {
+            for (int j = 0; j < k; ++j) {
+                double w = 0;
+                for (int p = 0; p < n; ++p)
+                    w += A[i * n + p] * B[p * k + j];
+                C[i * k + j] = w;
+            }
+        } 
+
+        gettimeofday(&finish, NULL);
+        duration = ((double)(finish.tv_sec-start.tv_sec)*1000000 + (double)(finish.tv_usec-start.tv_usec)) / 1000000;
+
+        double gflops = 2.0 * m * n * k;
+        gflops = gflops / duration * 1.0e-6 / 1000;
+        printf("%d:\nduration: %lf\nGflops: %lf\n", n, duration, gflops);
+        free(A);
+        free(B);
+        free(C);
+        free(buf_A);
+        free(tmp);
+    } else {
+        MPI_Recv(buf_A, block * n, MPI_DOUBLE, 0, 66, MPI_COMM_WORLD, &status);
+        MPI_Bcast(B, n * k, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        for (int i = 0; i < block; ++i)
+            for (int j = 0; j < k; ++j) {
+                double w = 0;
+                for (int p = 0; p < n; ++p) 
+                    w += buf_A[i * n + p] * B[p * k + j];
+                tmp[i * k + j] = w;
+            }
+        MPI_Send(tmp, block * k, MPI_DOUBLE, 0, 33, MPI_COMM_WORLD);
+    } MPI_Finalize();
+```
+
 naive法
 
 ```cpp
@@ -99,85 +161,136 @@ void naive_dgemm(double *A, double *B, double *C, int m, int n, int k) {
 
 ### 运行结果及比较
 
+```
+naive法
+
+2048:
+duration: 18.381240
+Gflops: 0.934641
+
+1024:
+duration: 2.250964
+Gflops: 0.954028
+
+512:
+duration: 0.283640
+Gflops: 0.946395
+
+256:
+duration: 0.036726
+Gflops: 0.913642
+
+128:
+duration: 0.006588
+Gflops: 0.636658
+
+64:
+duration: 0.001601
+Gflops: 0.327475
+
+16:
+duration: 0.000027
+Gflops: 0.303407
+
 pthread
 
-n = m = k = 2048
+2048:
+duration: 1.967628
+Gflops: 8.731259
 
-![](https://github.com/lb2003/hpc/blob/main/photo/p2048.png)
+1024:
+duration: 0.232615
+Gflops: 9.231922
 
-n = m = k = 1024
+512:
+duration: 0.032020
+Gflops: 8.383368
 
-![](https://github.com/lb2003/hpc/blob/main/photo/p1024.png)
+256:
+duration: 0.007890
+Gflops: 4.252780
 
-n = m = k = 256
+128:
+duration: 0.001578
+Gflops: 2.657987
 
-![](https://github.com/lb2003/hpc/blob/main/photo/p256.png)
+64:
+duration: 0.001483
+Gflops: 0.353532
 
-n = m = k = 64
+16:
+duration: 0.001448
+Gflops: 0.005657
 
-![](https://github.com/lb2003/hpc/blob/main/photo/p64.png)
+OpenMP
+2048:
+duration: 2.369842
+Gflops: 7.249373
 
-n = m = k = 16
+1024:
+duration: 0.256667
+Gflops: 8.366809
 
-![](https://github.com/lb2003/hpc/blob/main/photo/p16.png)
+512:
+duration: 0.039032
+Gflops: 6.877317
 
-OpenMp
+256:
+duration: 0.007734
+Gflops: 4.338561
 
-n = m = k = 2048
+128:
+duration: 0.003301
+Gflops: 1.270616
 
-![](https://github.com/lb2003/hpc/blob/main/photo/o2048.png)
+64:
+duration: 0.001284
+Gflops: 0.408324
 
-n = m = k = 1024
+16:
+duration: 0.001186
+Gflops: 0.006907
 
-![](https://github.com/lb2003/hpc/blob/main/photo/o1024.png)
+MPI
 
-n = m = k = 256
+2048:
+duration: 12.910291
+Gflops: 1.330711
 
-![](https://github.com/lb2003/hpc/blob/main/photo/o256.png)
+1024:
+duration: 0.824530
+Gflops: 2.604494
 
-n = m = k = 64
+512:
+duration: 0.078124
+Gflops: 3.436018
 
-![](https://github.com/lb2003/hpc/blob/main/photo/o64.png)
+256:
+duration: 0.009299
+Gflops: 3.608391
 
-n = m = k = 16
+128:
+duration: 0.003077
+Gflops: 1.363115
 
-![](https://github.com/lb2003/hpc/blob/main/photo/o16.png)
+64:
+duration: 0.000888
+Gflops: 0.590414
 
-naive
-
-n = m = k = 2048
-
-![](https://github.com/lb2003/hpc/blob/main/photo/n2048.png)
-
-n = m = k = 1024
-
-![](https://github.com/lb2003/hpc/blob/main/photo/n1024.png)
-
-n = m = k = 512
-
-![](https://github.com/lb2003/hpc/blob/main/photo/n512.png)
-
-n = m = k = 256
-
-![](https://github.com/lb2003/hpc/blob/main/photo/n256.png)
-
-n = m = k = 64
-
-![](https://github.com/lb2003/hpc/blob/main/photo/n64.png)
-
-n = m = k = 16
-
-![](https://github.com/lb2003/hpc/blob/main/photo/n16.png)
+16:
+duration: 0.000230
+Gflops: 0.035617
+```
 
 ### 数据分析
 
 ![](https://github.com/lb2003/hpc/blob/main/photo/data.png)
 
+![](https://github.com/lb2003/hpc/blob/main/photo/gflops.png)
+
 在28个线程下，对程序的优化大致约为 6 - 8 倍，提速明显。
 
-但是在实际中CPU利用率只有2000%
-
-![](https://github.com/lb2003/hpc/blob/main/photo/cpu.png)
+MPI单机效率实际上并不理想，但有利于多机器交互。
 
 ### 碰到的问题
 
@@ -185,8 +298,12 @@ n = m = k = 16
 
 2. 在OpenMP实现中，会出现pragma指令放置在哪提速的问题
 
+3. MPI实现过程中遇到数据越界的情况
+
 ### 解决过程
 
 1. 将int类型改为long时不会出现该问题。
 
 2. 首先放置在分块函数外，对每个分块函数调用，后来发现不行；改成对分块内for循环多进程后运行速度显著改善。
+
+3. 找到了数据越界的位置，并进行了修改，成功通过所给数据。

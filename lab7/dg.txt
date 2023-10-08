@@ -1,0 +1,27 @@
+2048:
+duration: 12.910291
+Gflops: 1.330711
+
+1024:
+duration: 0.824530
+Gflops: 2.604494
+
+512:
+duration: 0.078124
+Gflops: 3.436018
+
+256:
+duration: 0.009299
+Gflops: 3.608391
+
+128:
+duration: 0.003077
+Gflops: 1.363115
+
+64:
+duration: 0.000888
+Gflops: 0.590414
+
+16:
+duration: 0.000230
+Gflops: 0.035617
