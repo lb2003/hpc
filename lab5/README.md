@@ -175,6 +175,10 @@ n = m = k = 16
 
 在28个线程下，对程序的优化大致约为 6 - 8 倍，提速明显。
 
+但是在实际中CPU利用率只有2000%
+
+![](https://github.com/lb2003/hpc/blob/main/photo/cpu.png)
+
 ### 碰到的问题
 
 1. pthread_create函数传参时遇到 int 类型报错
