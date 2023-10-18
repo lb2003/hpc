@@ -281,7 +281,7 @@ updateCenter函数
 
 优化比较如图：
 
-![](https://github.com/lb2003/hpc/blob/main/photo/pic_1.png)
+![](https://github.com/lb2003/hpc/blob/main/photo/1.png)
 
 大致提升约6倍。
 
